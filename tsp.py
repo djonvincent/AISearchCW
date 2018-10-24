@@ -24,7 +24,5 @@ if __name__ == "__main__":
         position += size -i-1
         distances.append(row)
         
-    population = genetic.create_population(size, 100)
     genetic.distances = distances
-    print(population[0])
-    print(genetic.tour_length(population[0]))
+    genetic.genetic_algorithm()
