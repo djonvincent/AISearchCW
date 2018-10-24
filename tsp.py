@@ -1,5 +1,6 @@
 import sys
 import re
+import genetic
 
 if __name__ == "__main__":
     filename = sys.argv[1]
@@ -8,7 +9,7 @@ if __name__ == "__main__":
     m = re.search(pattern, "".join(f.readlines()))
     name = m.group(1)
     size = int(m.group(2))
-    numbers = "".join(m.group(3).split()).split(",")
+    numbers = [int(x) for x in "".join(m.group(3).split()).split(",")]
     print("Name:", name)
     print("Size:", size)
 
@@ -20,8 +21,10 @@ if __name__ == "__main__":
             row.append(distances[j][i])
         row.append(0)
         row += numbers[position:position+size-i-1]
-        print(row)
         position += size -i-1
         distances.append(row)
         
-    
+    population = genetic.create_population(size, 100)
+    genetic.distances = distances
+    print(population[0])
+    print(genetic.tour_length(population[0]))
