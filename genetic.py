@@ -7,7 +7,7 @@ CROSSOVER_PROB = 0.7
 TOURNAMENT_SIZE = 80
 POPULATION_SIZE = 100
 GENERATIONS = 1000
-NO_SELECTED = 10
+SELECTION_SIZE = 10
 
 # Swaps the positions of 2 random cities in a tour
 def mutate(tour):
@@ -20,7 +20,9 @@ def mutate(tour):
 
 def crossover(tour1, tour2):
     i = random.randint(0, len(tour1) - 1)
-    j = random.randint(0, len(tour1) - 1)
+    j = i
+    while i == j:
+        j = random.randint(0, len(tour1) - 1)
     i, j = min(i,j), max(i,j)
     tour2_unique = []
     for city in tour2:
@@ -48,11 +50,13 @@ def tour_length(tour):
 
 def tournament_selection(population):
     winners = []
-    for i in range(NO_SELECTED):
-        random.shuffle(population)
-        competitors = population[:TOURNAMENT_SIZE]
-        winner = min(competitors, key=tour_length)
-        winners.append(winner)
+    distances = [tour_length(tour) for tour in population]
+    for i in range(SELECTION_SIZE):
+        competitors = random.sample(range(len(population)), TOURNAMENT_SIZE)
+        winner = min(competitors, key=lambda j: distances[j])
+        winners.append(population[winner])
+        del(population[winner])
+        del(distances[winner])
     return winners
 
 def genetic_algorithm():
@@ -60,9 +64,8 @@ def genetic_algorithm():
     for i in range(GENERATIONS):
         selected = tournament_selection(population)
         children = []
-        for j in range(POPULATION_SIZE - NO_SELECTED):
-            random.shuffle(selected)
-            parents = selected[:2]
+        for j in range(POPULATION_SIZE - SELECTION_SIZE):
+            parents = random.sample(selected, 2)
             if random.random() < CROSSOVER_PROB:
                 child = crossover(*parents)
             else:
