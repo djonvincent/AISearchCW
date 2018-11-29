@@ -16,7 +16,14 @@ def mutate(tour):
     while j == i:
         j = random.randint(0, len(tour) - 1)
     tour[i], tour[j] = tour[j], tour[i]
-    return tour
+
+def mutate2(tour):
+    i = random.randint(0, len(tour) - 1)
+    j = i
+    while j == i:
+        j = random.randint(0, len(tour) - 1)
+    i, j = min(i,j), max(i,j)
+    tour[i:j] = list(reversed(tour[i:j]))
 
 def crossover(tour1, tour2):
     i = random.randint(0, len(tour1) - 1)
@@ -71,11 +78,9 @@ def genetic_algorithm():
             else:
                 child = random.choice(parents)[:]
             if random.random() < MUTATE_PROB:
-                mutate(child)
+                mutate2(child)
             children.append(child)
         population = selected + children
 
     solution = min(population, key=tour_length)
-    print(solution)
-    print(tour_length(solution))
-    return solution
+    return solution, tour_length(solution)
