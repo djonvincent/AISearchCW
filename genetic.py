@@ -3,9 +3,8 @@ import time
 
 distances = []
 
-MUTATE_PROB = 0.1
-CROSSOVER_PROB = 0.7
-TOURNAMENT_SIZE = 30
+MUTATE_PROB = 0.75
+TOURNAMENT_SIZE = 50
 POPULATION_SIZE = 100
 GENERATIONS = 1000
 SELECTION_SIZE = 10
@@ -56,6 +55,7 @@ def tour_length(tour):
 
 def tournament_selection(population):
     winners = []
+    population = population[:]
     distances = [tour_length(tour) for tour in population]
     for i in range(SELECTION_SIZE):
         competitors = random.sample(range(len(population)), TOURNAMENT_SIZE)
@@ -73,10 +73,7 @@ def genetic_algorithm():
         children = []
         for j in range(POPULATION_SIZE - SELECTION_SIZE):
             parents = random.sample(selected, 2)
-            if random.random() < CROSSOVER_PROB:
-                child = crossover(*parents)
-            else:
-                child = random.choice(parents)[:]
+            child = crossover(*parents)
             if random.random() < MUTATE_PROB:
                 mutate2(child)
             children.append(child)
