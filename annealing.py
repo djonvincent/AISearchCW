@@ -1,5 +1,6 @@
 import random
 import math
+import time
 
 START_TEMP = 100
 TEMP_COEF = 0.9999
@@ -20,6 +21,7 @@ def tour_length(tour):
     return distance
 
 def annealing_algorithm():
+    start_time = time.time()
     t = START_TEMP
     tour = list(range(len(distances[0])))
     random.shuffle(tour)
@@ -41,5 +43,7 @@ def annealing_algorithm():
         if delta < 0 or random.random() < p:
             tour = next_tour
         t = t*TEMP_COEF
+    end_time = time.time()
+    print('Time', end_time - start_time)
     return tour, tour_length(tour)
 

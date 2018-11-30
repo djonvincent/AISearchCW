@@ -1,4 +1,5 @@
 import random
+import time
 
 distances = []
 
@@ -31,12 +32,10 @@ def crossover(tour1, tour2):
     while i == j:
         j = random.randint(0, len(tour1) - 1)
     i, j = min(i,j), max(i,j)
-    tour2_unique = []
-    for city in tour2:
-        if city not in tour1[i:j]:
-            tour2_unique.append(city)
-    child = tour2_unique[:i] + tour1[i:j] + tour2_unique[i:]
-    return child
+    tour2_unique = tour2[:]
+    for city in tour1[i:j]:
+        tour2_unique.remove(city)
+    return tour2_unique[:i] + tour1[i:j] + tour2_unique[i:]
 
 def create_population():
     length = len(distances[0])
@@ -67,6 +66,7 @@ def tournament_selection(population):
     return winners
 
 def genetic_algorithm():
+    start_time = time.time()
     population = create_population()
     for i in range(GENERATIONS):
         selected = tournament_selection(population)
@@ -83,4 +83,6 @@ def genetic_algorithm():
         population = selected + children
 
     solution = min(population, key=tour_length)
+    end_time = time.time()
+    print('Time', end_time - start_time)
     return solution, tour_length(solution)
